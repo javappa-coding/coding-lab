@@ -1,2 +1,2 @@
 # coding-lab
-A collection of java training projects
+A collection of java training projects.
