@@ -1,6 +1,9 @@
 package com.javappa.start.api;
 
 import com.javappa.start.domain.SportEvent;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -9,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/sport-events")
+@Tag(name = "Sporting events")
 public class SportEventApi {
 
     private final Map<Long, SportEvent> events = new HashMap<>();
@@ -20,6 +24,7 @@ public class SportEventApi {
     }
 
     @GetMapping
+    @Operation(summary = "Gets all sporting events")
     List<SportEventResponse> getAll() {
         return events.values().stream()
                                 .map(sportEvent -> new SportEventResponse(sportEvent.getId(),
