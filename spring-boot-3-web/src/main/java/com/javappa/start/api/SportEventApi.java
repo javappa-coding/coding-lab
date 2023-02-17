@@ -49,7 +49,19 @@ public class SportEventApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get data by id")
     SportEventResponse getEvent(@PathVariable Long id) {
-        Optional<SportEvent> item = Optional.ofNullable(events.get(id));
-        return new SportEventResponse(id, item.orElseThrow().getName());
+        Optional<SportEvent> event = Optional.ofNullable(events.get(id));
+        return new SportEventResponse(id, event.orElseThrow().getName());
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update data")
+    SportEventResponse update(@PathVariable Long id, @RequestBody UpdateSportEventRequest eventRequest) {
+
+        Optional<SportEvent> event = Optional.ofNullable(events.get(id));
+        SportEvent sportEvent = event.orElseThrow();
+        sportEvent.setName(eventRequest.name());
+        log.info("Event updated");
+
+        return new SportEventResponse(id, sportEvent.getName());
     }
 }
