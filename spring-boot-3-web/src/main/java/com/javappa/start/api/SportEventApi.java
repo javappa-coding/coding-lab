@@ -4,6 +4,8 @@ import com.javappa.start.domain.SportEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class SportEventApi {
     }
 
     @GetMapping
-    @Operation(summary = "Get all data")
+    @Operation(summary = "Get all events")
     List<SportEventResponse> getAll() {
         return events.values().stream()
                                 .map(sportEvent -> new SportEventResponse(sportEvent.getId(),
@@ -38,7 +40,7 @@ public class SportEventApi {
     }
 
     @PostMapping
-    @Operation(summary = "Create new data")
+    @Operation(summary = "Create new event")
     void create(@RequestBody NewSportEventRequest eventRequest) {
         SportEvent event = new SportEvent(index.incrementAndGet(), eventRequest.name());
         events.put(index.get(), event);
@@ -47,15 +49,15 @@ public class SportEventApi {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get data by id")
+    @Operation(summary = "Get event by id")
     SportEventResponse getEvent(@PathVariable Long id) {
         Optional<SportEvent> event = Optional.ofNullable(events.get(id));
         return new SportEventResponse(id, event.orElseThrow().getName());
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update data")
-    SportEventResponse update(@PathVariable Long id, @RequestBody UpdateSportEventRequest eventRequest) {
+    @Operation(summary = "Update event")
+    SportEventResponse updateEvent(@PathVariable Long id, @RequestBody UpdateSportEventRequest eventRequest) {
 
         Optional<SportEvent> event = Optional.ofNullable(events.get(id));
         SportEvent sportEvent = event.orElseThrow();
@@ -63,5 +65,16 @@ public class SportEventApi {
         log.info("Event updated");
 
         return new SportEventResponse(id, sportEvent.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete event")
+    ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+
+        SportEvent event = Optional.ofNullable(events.get(id)).orElseThrow();
+        events.remove(event.getId());
+        log.info("Event removed");
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
