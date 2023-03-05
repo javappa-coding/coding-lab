@@ -1,6 +1,7 @@
 package com.javappa.start.api;
 
 import com.javappa.start.domain.SportEvent;
+import com.javappa.start.service.SportEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @Tag(name = "Sporting events")
 public class SportEventApi {
 
-    private AtomicLong index = new AtomicLong(3);
+    private final SportEventService sportEventService;
 
+    public SportEventApi(SportEventService sportEventService) {
+        this.sportEventService = sportEventService;
+    }
+
+    private AtomicLong index = new AtomicLong(3);
     private final Map<Long, SportEvent> events = new HashMap<>();
 
     {
@@ -33,10 +39,7 @@ public class SportEventApi {
     @GetMapping
     @Operation(summary = "Get all events")
     List<SportEventResponse> getAll() {
-        return events.values().stream()
-                                .map(sportEvent -> new SportEventResponse(sportEvent.getId(),
-                                                                            sportEvent.getName()))
-                                .toList();
+        return sportEventService.getAll();
     }
 
     @PostMapping
