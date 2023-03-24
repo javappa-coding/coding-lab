@@ -56,4 +56,12 @@ public class SportEventApi {
         sportEventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<String> handleException(Exception exception) {
+        log.error("Exception caught: {}", exception.getMessage());
+        return ResponseEntity.internalServerError()
+                                .body("Something went wrong. Please try again later.");
+    }
+
 }

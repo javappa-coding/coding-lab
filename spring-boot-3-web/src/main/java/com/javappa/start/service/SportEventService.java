@@ -60,4 +60,5 @@ public class SportEventService {
         events.remove(event.getId());
         log.info("Event removed");
     }
+
 }
