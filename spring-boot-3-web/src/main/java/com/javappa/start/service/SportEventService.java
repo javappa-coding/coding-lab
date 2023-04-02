@@ -4,6 +4,7 @@ import com.javappa.start.api.NewSportEventRequest;
 import com.javappa.start.api.SportEventResponse;
 import com.javappa.start.api.UpdateSportEventRequest;
 import com.javappa.start.domain.SportEvent;
+import com.javappa.start.support.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,8 @@ public class SportEventService {
     }
 
     public void deleteEvent(Long id) {
-        SportEvent event = Optional.ofNullable(events.get(id)).orElseThrow();
+        SportEvent event = Optional.ofNullable(events.get(id)).orElseThrow(() ->
+                new ResourceNotFoundException("SportEvent " + id + " not found"));
         events.remove(event.getId());
         log.info("Event removed");
     }
