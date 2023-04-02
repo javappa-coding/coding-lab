@@ -57,11 +57,12 @@ public class SportEventApi {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(Exception.class)
-    ResponseEntity<String> handleException(Exception exception) {
-        log.error("Exception caught: {}", exception.getMessage());
-        return ResponseEntity.internalServerError()
-                                .body("Something went wrong. Please try again later.");
-    }
+//    We use CustomExceptionHandler class now
+//    @ExceptionHandler(Exception.class)
+//    ResponseEntity<String> handleException(Exception exception) {
+//        log.error("Exception caught: {}", exception.getMessage());
+//        return ResponseEntity.internalServerError()
+//                                .body("Something went wrong. Please try again later.");
+//    }
 
 }
