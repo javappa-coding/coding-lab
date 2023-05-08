@@ -29,7 +29,7 @@ public class SportEventService {
     }
 
     public Long create(NewSportEventRequest eventRequest) {
-        SportEvent event = new SportEvent(null, eventRequest.name());
+        SportEvent event = new SportEvent(null, eventRequest.name(), eventRequest.city());
         SportEvent savedEvent = sportEventRepository.save(event);
         log.info("Event created");
 

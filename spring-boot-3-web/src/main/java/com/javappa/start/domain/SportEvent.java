@@ -19,5 +19,6 @@ public class SportEvent {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SportingEventsSequence")
     private Long id;
     private String name;
+    private String city;
 
 }

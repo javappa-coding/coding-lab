@@ -1,4 +1,4 @@
 package com.javappa.start.api;
 
-public record NewSportEventRequest(String name) {
+public record NewSportEventRequest(String name, String city) {
 }

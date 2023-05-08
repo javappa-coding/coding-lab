@@ -23,9 +23,9 @@ public class SportEventServiceOld {
     private final Map<Long, SportEvent> events = new HashMap<>();
 
     {
-        events.put(1L, new SportEvent(1L, "Volleyball match"));
-        events.put(2L, new SportEvent(2L, "Football match"));
-        events.put(3L, new SportEvent(3L, "Boxing fight"));
+        events.put(1L, new SportEvent(1L, "Volleyball match", ""));
+        events.put(2L, new SportEvent(2L, "Football match", ""));
+        events.put(3L, new SportEvent(3L, "Boxing fight", ""));
     }
 
     public List<SportEventResponse> getAll() {
@@ -36,7 +36,7 @@ public class SportEventServiceOld {
     }
 
     public Long create(NewSportEventRequest eventRequest) {
-        SportEvent event = new SportEvent(index.incrementAndGet(), eventRequest.name());
+        SportEvent event = new SportEvent(index.incrementAndGet(), eventRequest.name(), eventRequest.city());
         events.put(index.get(), event);
         log.info("Event created");
 
