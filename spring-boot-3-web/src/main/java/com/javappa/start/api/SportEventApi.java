@@ -57,6 +57,15 @@ public class SportEventApi {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{eventId}/tickets")
+    @Operation(summary = "Add tickets to an event")
+    public ResponseEntity<List<Long>> addTicketsToEvent(@PathVariable Long eventId,
+                                                        @RequestBody NewTicketsRequest ticketsRequest) {
+        List<Long> ticketIds = sportEventService.addTicketsToEvent(eventId, ticketsRequest);
+        return ResponseEntity.ok(ticketIds);
+    }
+
+
 //    We use CustomExceptionHandler class now
 //    @ExceptionHandler(Exception.class)
 //    ResponseEntity<String> handleException(Exception exception) {
