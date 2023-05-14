@@ -1,4 +1,8 @@
 package com.javappa.start.api;
 
-public record SportEventResponse(Long id, String name) {
+import java.time.Instant;
+import java.util.List;
+
+public record SportEventResponse(Long id, String name, String city,
+                                    Instant startTime, Instant endTime, List<TicketDTO> ticketDTO) {
 }

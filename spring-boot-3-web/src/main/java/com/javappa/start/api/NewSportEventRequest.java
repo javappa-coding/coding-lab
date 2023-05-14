@@ -1,4 +1,6 @@
 package com.javappa.start.api;
 
-public record NewSportEventRequest(String name, String city) {
+import java.time.Instant;
+
+public record NewSportEventRequest(String name, String city, Instant startTime, Instant endTime) {
 }
