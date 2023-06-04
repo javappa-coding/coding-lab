@@ -65,6 +65,21 @@ public class SportEventApi {
         return ResponseEntity.ok(ticketIds);
     }
 
+    @PostMapping("/{eventId}/sponsors/{sponsorId}")
+    @Operation(summary = "Add a sponsor to an event")
+    public ResponseEntity<Void> addSponsorToEvent(@PathVariable Long eventId,
+                                                  @PathVariable Long sponsorId) {
+        sportEventService.addSponsorToEvent(eventId, sponsorId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{eventId}/sponsors/{sponsorId}")
+    @Operation(summary = "Remove a sponsor from an event")
+    public ResponseEntity<Void> removeSponsorFromEvent(@PathVariable Long eventId,
+                                                       @PathVariable Long sponsorId) {
+        sportEventService.removeSponsorFromEvent(eventId, sponsorId);
+        return ResponseEntity.noContent().build();
+    }
 
 //    We use CustomExceptionHandler class now
 //    @ExceptionHandler(Exception.class)
