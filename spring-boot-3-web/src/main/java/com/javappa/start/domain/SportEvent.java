@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -28,7 +30,6 @@ public class SportEvent {
     private Instant endTime;
 
     public SportEvent(String name, String city, Instant startTime, Instant endTime) {
-        this.id = id;
         this.name = name;
         this.city = city;
         this.startTime = startTime;
@@ -37,4 +38,11 @@ public class SportEvent {
 
     @OneToMany(mappedBy = "sportEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_sponsor",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "sponsor_id"))
+    private Set<Sponsor> sponsors = new HashSet<>();
 }

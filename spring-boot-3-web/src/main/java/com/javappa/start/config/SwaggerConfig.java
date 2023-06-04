@@ -14,7 +14,7 @@ public class SwaggerConfig {
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
                 .group("all")
-                .pathsToMatch("/api/sport-events/**")
+                .pathsToMatch("/api/**")
                 .build();
     }
 
@@ -22,7 +22,7 @@ public class SwaggerConfig {
     public GroupedOpenApi byIdApi() {
         return GroupedOpenApi.builder()
                 .group("byId")
-                .pathsToMatch("/api/sport-events/{id}")
+                .pathsToMatch("/api/{entity}/{id}")
                 .build();
     }
 

@@ -1,14 +1,15 @@
 package com.javappa.start.service;
 
 import com.javappa.start.api.*;
+import com.javappa.start.domain.Sponsor;
 import com.javappa.start.domain.SportEvent;
 import com.javappa.start.domain.Ticket;
 import com.javappa.start.repository.SportEventRepository;
 import com.javappa.start.support.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,18 +21,20 @@ public class SportEventService {
 
     private final SportEventRepository sportEventRepository;
     private final TicketService ticketService;
+    private final SponsorService sponsorService;
 
     public List<SportEventResponse> getAll() {
-        return sportEventRepository.findAll().stream()
-                .map(sportEvent -> new SportEventResponse(sportEvent.getId(),
-                        sportEvent.getName(), sportEvent.getCity(),
-                        sportEvent.getStartTime(), sportEvent.getEndTime(), null)) // we don't want to retrieve all tickets when retrieving all events
+        return sportEventRepository.findAll().stream().map(
+                        sportEvent -> new SportEventResponse(sportEvent.getId(), sportEvent.getName(),
+                                sportEvent.getCity(),
+                                sportEvent.getStartTime(), sportEvent.getEndTime(), null,
+                                null))// we don't want to retrieve all tickets and sponsors when retrieving all events)
                 .collect(Collectors.toList());
     }
 
     public Long create(NewSportEventRequest eventRequest) {
-        SportEvent event = new SportEvent( eventRequest.name(), eventRequest.city(),
-                eventRequest.startTime(), eventRequest.endTime());
+        SportEvent event = new SportEvent(eventRequest.name(), eventRequest.city(), eventRequest.startTime(),
+                eventRequest.endTime());
         SportEvent savedEvent = sportEventRepository.save(event);
         log.info("Event created");
 
@@ -39,19 +42,18 @@ public class SportEventService {
     }
 
     public SportEventResponse getEvent(Long id) {
-        SportEvent event = sportEventRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("SportEvent " + id + " not found"));
-        return new SportEventResponse(id, event.getName(), event.getCity(),
-                                                event.getStartTime(), event.getEndTime(),
-                                                    event.getTickets().stream()
-                                                    .map(ticket -> new TicketDTO(ticket.getSeatNumber(),
-                                                                                   ticket.getPrice()))
-                                                    .collect(Collectors.toList()));
+        SportEvent event = sportEventRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("SportEvent " + id + " not found"));
+        return new SportEventResponse(id, event.getName(), event.getCity(), event.getStartTime(), event.getEndTime(),
+                event.getTickets().stream().map(ticket -> new TicketDTO(ticket.getSeatNumber(), ticket.getPrice()))
+                        .collect(Collectors.toList()), event.getSponsors().stream()
+                .map(sponsor -> new SponsorDTO(sponsor.getId(), sponsor.getName(), sponsor.getIndustry()))
+                .collect(Collectors.toSet()));
     }
 
     public SportEventResponse updateEvent(Long id, UpdateSportEventRequest eventRequest) {
-        SportEvent sportEvent = sportEventRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("SportEvent " + id + " not found"));
+        SportEvent sportEvent = sportEventRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("SportEvent " + id + " not found"));
 
         sportEvent.setName(eventRequest.name());
         sportEvent.setCity(eventRequest.city());
@@ -60,13 +62,14 @@ public class SportEventService {
         sportEventRepository.save(sportEvent);
         log.info("Event updated");
 
-        return new SportEventResponse(id, sportEvent.getName(), sportEvent.getCity(),
-                                            sportEvent.getStartTime(), sportEvent.getEndTime(), null); // we don't change tickets using update method, it is better to create a separated method
+        return new SportEventResponse(id, sportEvent.getName(), sportEvent.getCity(), sportEvent.getStartTime(),
+                sportEvent.getEndTime(), null,
+                null); // we don't change tickets using update method, it is better to create a separated method
     }
 
     public void deleteEvent(Long id) {
-        SportEvent event = sportEventRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("SportEvent " + id + " not found"));
+        SportEvent event = sportEventRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("SportEvent " + id + " not found"));
 
         sportEventRepository.delete(event);
         log.info("Event removed");
@@ -74,8 +77,8 @@ public class SportEventService {
 
     @Transactional
     public List<Long> addTicketsToEvent(Long eventId, NewTicketsRequest ticketsRequest) {
-        SportEvent event = sportEventRepository.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("SportEvent " + eventId + " not found"));
+        SportEvent event = sportEventRepository.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("SportEvent " + eventId + " not found"));
 
         List<Ticket> tickets = ticketService.create(ticketsRequest, event);
         event.getTickets().addAll(tickets);
@@ -83,6 +86,24 @@ public class SportEventService {
         log.info("Tickets added to the event with id: " + eventId);
 
         return tickets.stream().map(Ticket::getId).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addSponsorToEvent(Long eventId, Long sponsorId) {
+        SportEvent event = sportEventRepository.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("SportEvent " + eventId + " not found"));
+        Sponsor sponsor = sponsorService.getSponsor(sponsorId);
+        event.getSponsors().add(sponsor);
+        sponsor.getEvents().add(event);
+    }
+
+    @Transactional
+    public void removeSponsorFromEvent(Long eventId, Long sponsorId) {
+        SportEvent event = sportEventRepository.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("SportEvent " + eventId + " not found"));
+        Sponsor sponsor = sponsorService.getSponsor(sponsorId);
+        event.getSponsors().remove(sponsor);
+        sponsor.getEvents().remove(event);
     }
 
 }
