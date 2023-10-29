@@ -36,6 +36,13 @@ public class SponsorApi {
         return ResponseEntity.created(location).build();
     }
 
+    @GetMapping("/promo-code/{id}")
+    @Operation(summary = "Get promo code")
+    public ResponseEntity<String> generatePromoCode(@PathVariable Long id) {
+        String promoCode = sponsorService.generatePromoCode(id);
+        return ResponseEntity.ok(promoCode);
+    }
+
     // other methods when needed...
     //
     //    @PutMapping("/{id}")

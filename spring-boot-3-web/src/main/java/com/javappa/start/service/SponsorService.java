@@ -1,6 +1,7 @@
 package com.javappa.start.service;
 
 import com.javappa.start.api.NewSponsorRequest;
+import com.javappa.start.domain.PromoCode;
 import com.javappa.start.domain.Sponsor;
 import com.javappa.start.repository.SponsorRepository;
 import com.javappa.start.support.ResourceNotFoundException;
@@ -14,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class SponsorService {
 
     private final SponsorRepository sponsorRepository;
+    private final PromoCode promoCode;
 
     public Long create(NewSponsorRequest sponsorRequest) {
         Sponsor sponsor = new Sponsor(sponsorRequest.name(), sponsorRequest.industry());
         Sponsor savedSponsor = sponsorRepository.save(sponsor);
         log.info("Sponsor created");
-
         return savedSponsor.getId();
     }
 
@@ -28,5 +29,12 @@ public class SponsorService {
                 () -> new ResourceNotFoundException("Sponsor " + id + " not found"));
     }
 
-    // other methods when needed...
+    public String generatePromoCode(Long id) {
+        log.info("Promo code from sponsor id: " + id);
+        String code = promoCode.getCode();
+        log.info(code);
+        log.info(promoCode.toString());
+        //TODO: Save in the database
+        return code;
+    }
 }
