@@ -7,6 +7,7 @@ import com.javappa.start.repository.SponsorRepository;
 import com.javappa.start.support.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Service;
 public class SponsorService {
 
     private final SponsorRepository sponsorRepository;
-    private final PromoCode promoCode;
+    //private final PromoCode promoCode;
+    private final ApplicationContext applicationContext;
 
     public Long create(NewSponsorRequest sponsorRequest) {
         Sponsor sponsor = new Sponsor(sponsorRequest.name(), sponsorRequest.industry());
@@ -31,6 +33,7 @@ public class SponsorService {
 
     public String generatePromoCode(Long id) {
         log.info("Promo code from sponsor id: " + id);
+        PromoCode promoCode = applicationContext.getBean(PromoCode.class);
         String code = promoCode.getCode();
         log.info(code);
         log.info(promoCode.toString());
