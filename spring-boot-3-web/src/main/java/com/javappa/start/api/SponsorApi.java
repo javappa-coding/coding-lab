@@ -43,6 +43,13 @@ public class SponsorApi {
         return ResponseEntity.ok(promoCode);
     }
 
+    @GetMapping("/promo-codes")
+    @Operation(summary = "Generate promo codes")
+    public ResponseEntity<Void> generatePromoCodes() {
+        sponsorService.generateAndProcessPromoCodes();
+        return ResponseEntity.ok().build();
+    }
+
     // other methods when needed...
     //
     //    @PutMapping("/{id}")
