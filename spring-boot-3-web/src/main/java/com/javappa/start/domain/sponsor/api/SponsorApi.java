@@ -1,7 +1,9 @@
 package com.javappa.start.domain.sponsor.api;
 
-import com.javappa.start.domain.sponsor.domain.Sponsor;
-import com.javappa.start.domain.sponsor.service.SponsorService;
+import com.javappa.start.domain.shared.model.Sponsor;
+import com.javappa.start.domain.sponsor.api.dto.NewSponsorRequest;
+import com.javappa.start.domain.sponsor.api.dto.SponsorResponse;
+import com.javappa.start.domain.sponsor.application.service.SponsorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

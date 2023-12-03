@@ -1,7 +1,10 @@
 package com.javappa.start.domain.sportevent.api;
 
-import com.javappa.start.domain.sportevent.service.SportEventService;
-import com.javappa.start.domain.ticket.api.NewTicketsRequest;
+import com.javappa.start.domain.sportevent.api.dto.AddTicketToSportEventRequest;
+import com.javappa.start.domain.sportevent.api.dto.NewSportEventRequest;
+import com.javappa.start.domain.sportevent.api.dto.SportEventResponse;
+import com.javappa.start.domain.sportevent.api.dto.UpdateSportEventRequest;
+import com.javappa.start.domain.sportevent.application.service.SportEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +64,7 @@ public class SportEventApi {
     @PostMapping("/{eventId}/tickets")
     @Operation(summary = "Add tickets to an event")
     public ResponseEntity<List<Long>> addTicketsToEvent(@PathVariable Long eventId,
-                                                        @RequestBody NewTicketsRequest ticketsRequest) {
+                                                        @RequestBody AddTicketToSportEventRequest ticketsRequest) {
         List<Long> ticketIds = sportEventService.addTicketsToEvent(eventId, ticketsRequest);
         return ResponseEntity.ok(ticketIds);
     }
