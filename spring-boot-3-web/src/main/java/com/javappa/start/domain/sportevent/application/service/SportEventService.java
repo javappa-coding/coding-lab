@@ -1,8 +1,6 @@
 package com.javappa.start.domain.sportevent.application.service;
 
 import com.javappa.start.core.support.ResourceNotFoundException;
-import com.javappa.start.domain.ticket.application.dto.NewTicketsCommand;
-import com.javappa.start.domain.ticket.application.dto.TicketDTO;
 import com.javappa.start.domain.shared.model.Sponsor;
 import com.javappa.start.domain.shared.model.SportEvent;
 import com.javappa.start.domain.shared.model.Ticket;
@@ -14,6 +12,8 @@ import com.javappa.start.domain.sportevent.api.dto.UpdateSportEventRequest;
 import com.javappa.start.domain.sportevent.domain.SportEventSponsorDTO;
 import com.javappa.start.domain.sportevent.domain.SportEventTicketDTO;
 import com.javappa.start.domain.sportevent.domain.repository.SportEventRepository;
+import com.javappa.start.domain.ticket.application.dto.NewTicketsCommand;
+import com.javappa.start.domain.ticket.application.dto.TicketDTO;
 import com.javappa.start.domain.ticket.application.service.TicketService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -102,7 +102,7 @@ public class SportEventService {
         log.info("Tickets added to the event with id: " + eventId);
 
         return tickets.stream().map(Ticket::getId).collect(toList());
-    }
+    } 
 
     @Transactional
     public void addSponsorToEvent(Long eventId, Long sponsorId) {
