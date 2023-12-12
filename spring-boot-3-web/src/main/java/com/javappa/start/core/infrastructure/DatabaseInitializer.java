@@ -34,6 +34,13 @@ public class DatabaseInitializer {
             newUser.setPassword(passwordEncoder.encode("aaaa"));
             userRepository.save(newUser);
         }
+        Optional<User> existingUser2 = userRepository.findByUsername("doej2");
+        if (existingUser2.isEmpty()) {
+            User newUser = new User();
+            newUser.setUsername("doej2");
+            newUser.setPassword(passwordEncoder.encode("aaaa"));
+            userRepository.save(newUser);
+        }
     }
 
     @PostConstruct
